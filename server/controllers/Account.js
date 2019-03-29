@@ -23,7 +23,7 @@ const login = (request, response) => {
   const password = `${req.body.pass}`;
 
   if (!username || !password) {
-    return res.status(400).json({ error: 'All fields are required.' });
+    return res.status(400).json({ error: 'RAWR! All fields are required.' });
   }
   return Account.AccountModel.authenticate(username, password, (err, account) => {
     if (err || !account) {
@@ -43,7 +43,7 @@ const signup = (request, response) => {
   req.body.pass2 = `${req.body.pass2}`;
 
   if (!req.body.username || !req.body.pass || !req.body.pass2) {
-    return res.status(400).json({ error: 'All fields are required' });
+    return res.status(400).json({ error: 'RAWR! All fields are required' });
   }
 
   if (req.body.pass !== req.body.pass2) {
@@ -74,8 +74,20 @@ const signup = (request, response) => {
   });
 };
 
+const getToken = (request, response) => {
+    const req = request;
+    const res = response;
+    
+    const csrfJSON = {
+        csrfToken: req.csrfToken(),
+    };
+    
+    res.json(csrfJSON);
+};
+
 module.exports.loginPage = loginPage;
 module.exports.login = login;
 module.exports.logout = logout;
 module.exports.signupPage = signupPage;
 module.exports.signup = signup;
+module.exports.getToken = getToken;
