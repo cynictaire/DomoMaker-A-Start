@@ -24,15 +24,15 @@ mongoose.connect(dbURL, (err) => {
 });
 
 let redisURL = {
-    hostname: 'localhost',
-    port: 6379,
+  hostname: 'localhost',
+  port: 6379,
 };
 
 let redisPASS;
 
 if (process.env.REDISCLOUD_URL) {
-    redisURL = url.parse(process.env.REDISCLOUD_URL);
-    redisPASS = redisURL.auth.split(':')[1];
+  redisURL = url.parse(process.env.REDISCLOUD_URL);
+  redisPASS = redisURL.auth.split(':')[1];
 }
 
 // pull in our routes
@@ -42,36 +42,40 @@ const app = express();
 app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.disable('x-powered-by');
+
 app.use(compression());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+
 app.use(session({
   key: 'sessionid',
   store: new RedisStore({
-      host: redisURL.hostname,
-      port: redisURL.port,
-      pass: redisPASS,
+    host: redisURL.hostname,
+    port: redisURL.port,
+    pass: redisPASS,
   }),
   secret: 'Domo Arigato',
   resave: true,
   saveUninitialized: true,
   cookie: {
-      httpOnly: true,
+    httpOnly: true,
   },
 }));
+
 app.engine('handlebars', expressHandlebars({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
-app.use(cookieParser());
 
-// csrf must come AFTER app.use(cookieParser()); and app.use(session({...}); and should come BEFORE the router
+// csrf must come AFTER app.use(cookieParser()); and app.use(session({ ........ });
+// should come before the router
 app.use(csrf());
 app.use((err, req, res, next) => {
-    if (err.code !== 'EBADCSRFTOKEN') return next (err);
-    
-    console.log('Missing CSRF token');
-    return false;
+  if (err.code !== 'EBADCSRFTOKEN') {
+    return next(err);
+  }
+  console.log('Missing CSRF token');
+  return false;
 });
 
 router(app);
