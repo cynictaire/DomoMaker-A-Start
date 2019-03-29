@@ -67,6 +67,8 @@ app.engine('handlebars', expressHandlebars({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 
+app.use(cookieParser());
+
 // csrf must come AFTER app.use(cookieParser()); and app.use(session({ ........ });
 // should come before the router
 app.use(csrf());
