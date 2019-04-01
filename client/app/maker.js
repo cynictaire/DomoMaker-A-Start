@@ -15,6 +15,22 @@ const handleDomo = (e) => {
     return false;
 };
 
+// Delete Domos
+const handleDelete = (e, domo) => {
+
+    //console.log($(`#${domo.name}deleteForm`).serialize());
+    
+    let domoSerialize = $(`#${domo.name}deleteForm`).serialize() + document.querySelector("#csrfVal").value;
+    
+    //console.log(domoSerialize);
+    
+    sendAjax('POST', $(`#${domo.name}deleteForm`).attr("action"), domoSerialize, function() {
+        loadDomosFromServer();
+    });
+    
+    return false;
+};
+
 const DomoForm = (props) => {
     return (
         <form id="domoForm" 
@@ -30,7 +46,7 @@ const DomoForm = (props) => {
             <input id="domoAge" type="text" name="age" placeholder="Domo Age"/>
             <label htmlFor="height">Height: </label>
             <input id="domoHeight" type="text" name="height" placeholder="Domo Height"/>
-            <input type="hidden" name="_csrf" value={props.csrf} />
+            <input type="hidden" id="csrfVal" name="_csrf" value={props.csrf} />
             <input className="makeDomoSubmit" type="submit" value="Make Domo" />
         </form>
     );
@@ -44,7 +60,7 @@ const DomoList = function(props) {
             </div>
         );
     }
-  
+    
     const domoNodes = props.domos.map(function(domo) {
         return (
             <div key={domo._id} className="domo">
@@ -52,6 +68,17 @@ const DomoList = function(props) {
                 <h3 className="domoName"> Name: {domo.name} </h3>
                 <h3 className="domoAge"> Age: {domo.age} </h3>
                 <h3 className="domoHeight"> Height: {domo.height} </h3>
+                
+                <form id={`${domo.name}deleteForm`} 
+                      onSubmit={(e) => handleDelete(e, domo)}
+                      name="deleteForm"
+                      action="/delete"
+                      method="POST"
+                >
+                    <input type="hidden" name="domoID" value={domo._id} />
+                    <input type="hidden" name="_csrf" value={props.csrf} />
+                    <input type="submit" value="Delete Domo"/>
+                </form>
             </div>
         );
     });
