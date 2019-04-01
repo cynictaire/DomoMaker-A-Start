@@ -17,22 +17,6 @@ var handleDomo = function handleDomo(e) {
     return false;
 };
 
-// Delete Domos
-var handleDelete = function handleDelete(e, domo) {
-
-    //console.log($(`#${domo.name}deleteForm`).serialize());
-
-    var domoSerialize = $("#" + domo.name + "deleteForm").serialize() + document.querySelector("#csrfVal").value;
-
-    //console.log(domoSerialize);
-
-    sendAjax('POST', $("#" + domo.name + "deleteForm").attr("action"), domoSerialize, function () {
-        loadDomosFromServer();
-    });
-
-    return false;
-};
-
 var DomoForm = function DomoForm(props) {
     return React.createElement(
         "form",
@@ -64,6 +48,22 @@ var DomoForm = function DomoForm(props) {
         React.createElement("input", { type: "hidden", id: "csrfVal", name: "_csrf", value: props.csrf }),
         React.createElement("input", { className: "makeDomoSubmit", type: "submit", value: "Make Domo" })
     );
+};
+
+// Delete Domos
+var handleDelete = function handleDelete(e, domo) {
+
+    //console.log($(`#${domo.name}deleteForm`).serialize());
+
+    var domoSerialize = $("#" + domo.name + "deleteForm").serialize() + document.querySelector("#csrfVal").value;
+
+    //console.log(domoSerialize);
+
+    sendAjax('POST', $("#" + domo.name + "deleteForm").attr("action"), domoSerialize, function () {
+        loadDomosFromServer();
+    });
+
+    return false;
 };
 
 var DomoList = function DomoList(props) {

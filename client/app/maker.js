@@ -15,22 +15,6 @@ const handleDomo = (e) => {
     return false;
 };
 
-// Delete Domos
-const handleDelete = (e, domo) => {
-
-    //console.log($(`#${domo.name}deleteForm`).serialize());
-    
-    let domoSerialize = $(`#${domo.name}deleteForm`).serialize() + document.querySelector("#csrfVal").value;
-    
-    //console.log(domoSerialize);
-    
-    sendAjax('POST', $(`#${domo.name}deleteForm`).attr("action"), domoSerialize, function() {
-        loadDomosFromServer();
-    });
-    
-    return false;
-};
-
 const DomoForm = (props) => {
     return (
         <form id="domoForm" 
@@ -50,6 +34,22 @@ const DomoForm = (props) => {
             <input className="makeDomoSubmit" type="submit" value="Make Domo" />
         </form>
     );
+};
+
+// Delete Domos
+const handleDelete = (e, domo) => {
+
+    //console.log($(`#${domo.name}deleteForm`).serialize());
+    
+    let domoSerialize = $(`#${domo.name}deleteForm`).serialize() + document.querySelector("#csrfVal").value;
+    
+    //console.log(domoSerialize);
+    
+    sendAjax('POST', $(`#${domo.name}deleteForm`).attr("action"), domoSerialize, function() {
+        loadDomosFromServer();
+    });
+    
+    return false;
 };
 
 const DomoList = function(props) {
