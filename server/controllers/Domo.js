@@ -43,19 +43,24 @@ const makeDomo = (req, res) => {
   return domoPromise;
 };
 
-const deleteDomos = (req, res) => {
+const deleteDomos = (request, response) => {
+  const req = request;
+  const res = response;
+
   if (!req.body.domoID) {
-      return res.status(400).json({ error: 'An error occurred' });
+    return res.status(400).json({ error: 'An error occurred' });
   }
-    
-  Domo.DomoModel.deleteDomos(req.body.domoID, (err) => {
-      if (err) {
-          console.log(err);
-          return res.status(202).json({ error: 'An error occurred' });
-      }
-      
-      return false;
+
+  Domo.DomoModel.deleteDomos(req.body.domoID, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(202).json({ error: 'An error occurred' });
+    }
+
+    return res.json({ domos: docs });
   });
+
+  return false;
 };
 
 const getDomos = (request, response) => {
